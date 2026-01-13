@@ -1,16 +1,15 @@
-FROM node:22-alpine AS builder
+# Lightweight web server
+FROM nginx:alpine
 
-WORKDIR /app
+# Remove default nginx content
+RUN rm -rf /usr/share/nginx/html/*
 
-# Copy dependency files
-COPY package.json package-lock.json* ./
+# Copy static application files
+COPY . /usr/share/nginx/html
 
-# Install dependencies
-RUN npm ci --only=production
+# Expose HTTP port
+EXPOSE 80
 
-# Copy application source
-COPY . .
+# Run nginx
+CMD ["nginx", "-g", "daemon off;"]
 
-EXPOSE 5000
-
-CMD ["npm", "start"]"]
